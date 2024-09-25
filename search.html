@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Blood Donors</title>
+<link rel="stylesheet" href="style (2).css" type="text/css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 500px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+    label {
+        display: block;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    select, input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    input[type="submit"] {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #c82333;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="containerx">
+        <div id="branding">
+            <h1><span class="highlight">Search Blood</span> Donors</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" >Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="requests.html">Request Blood</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="register.html">Register</a></li>
+                <li class="current"><a href="search.html">Search</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+    <h2>Search Blood Donors</h2>
+    <form action="search.php" method="get">
+        <p>Select blood group to find donors:</p>
+        <select id="bloodGroup" name="blood_group">
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+        </select>
+        <input type="submit" value="Search">
+    </form>
+    <div id="donorsTable"></div>
+</div>
+
+<script>
+document.getElementById('bloodGroup').addEventListener('change', function() {
+    var bloodGroup = this.value;
+    if (bloodGroup) {
+        fetch('donors.php?blood_group=' + bloodGroup)
+            .then(response => response.json())
+            .then(data => {
+                displayDonors(data);
+            });
+    } else {
+        document.getElementById('donorsTable').innerHTML = '';
+    }
+});
+
+function displayDonors(donors) {
+    var table = '<table>';
+    table += '<tr><th>Name</th><th>Age</th><th>Blood Group</th><th>Contact</th></tr>';
+    donors.forEach(function(donor) {
+        table += '<tr>';
+        table += '<td>' + donor.name + '</td>';
+        table += '<td>' + donor.age + '</td>';
+        table += '<td>' + donor.blood_group + '</td>';
+        table += '<td>' + donor.contact + '</td>';
+        table += '</tr>';
+    });
+    table += '</table>';
+    document.getElementById('donorsTable').innerHTML = table;
+}
+</script>
+
+</body>
+</html>
